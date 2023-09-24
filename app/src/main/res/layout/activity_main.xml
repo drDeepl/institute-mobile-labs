@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/catsWo"
+    android:id="@+id/lab3"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Слава Котане!"
-        tools:layout_editor_absoluteX="158dp"
-        tools:layout_editor_absoluteY="356dp" />
-
-
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -21,30 +14,56 @@
         android:background="@drawable/roundstyle"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
-
-        >
-    </androidx.appcompat.widget.Toolbar>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Lab 3.1" />
 
     <TextView
+        android:id="@+id/textCat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Пример из лабораторной 1"
-        android:textColor="@color/crema"
-        tools:layout_editor_absoluteX="20dp"
-        tools:layout_editor_absoluteY="17dp"
-
-        />
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="16dp"
+        android:text="Слава Котане!"
+        app:layout_constraintBottom_toTopOf="@+id/btn_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.522"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_meow"
-        android:backgroundTint="@drawable/btnround"
+        android:id="@+id/btn_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="мяу"
-        tools:layout_editor_absoluteX="156dp"
-        tools:layout_editor_absoluteY="393dp" />
+        android:layout_marginBottom="366dp"
+        android:backgroundTint="@color/primary"
+        android:text="Никитин В.Е"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:id="@+id/diceImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="85dp"
+        android:layout_marginRight="100dp"
+        android:src="@drawable/dice_1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="3.0"
+        app:layout_constraintStart_toEndOf="@+id/btnDice" />
+
+    <Button
+        android:id="@+id/btnDice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="@color/primary"
+        android:text="тык.."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
