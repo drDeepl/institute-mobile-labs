@@ -1,6 +1,8 @@
 package com.example.lab1
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -22,6 +24,18 @@ class MainActivity : AppCompatActivity() {
         diceBtn.setOnClickListener {
             rollDice()
         }
+
+        val nextActivityBtn: Button = findViewById(R.id.btn_next_activity)
+        nextActivityBtn.setOnClickListener {
+            var intent: Intent = Intent(this, SecondActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    fun onClickBtnNextActivity(v: View){
+        println("onClickBtnNext")
+        var intent: Intent = Intent(this, SecondActivity::class.java)
+        startActivity(intent)
     }
 
     private fun toChangeText(text: String){
