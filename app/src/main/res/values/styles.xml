@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PrimaryStyle">
+        <item name="android:textSize">25sp</item>
+        <item name="android:layout_marginRight">13dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="DiceStyle">
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginBottom">85dp</item>
+    </style>
+</resources>
