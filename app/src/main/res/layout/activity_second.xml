@@ -17,6 +17,26 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="Lab 3.1" />
 
+    <EditText
+        android:id = "@+id/inputCurrencyValue"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:layout_marginLeft="50dp"
+        android:hint="RUB"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="452dp" />
+
+
+
     <Button
         android:id="@+id/btn_main_activity"
         android:layout_width="wrap_content"
@@ -29,5 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
