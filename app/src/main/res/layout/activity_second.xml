@@ -16,6 +16,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="Lab 3.1" />
+    <TextView
+        android:id="@+id/taskTitle"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="55dp"
+        style="@style/PrimaryStyle"
+        android:text="конвертер валют"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <EditText
         android:id = "@+id/inputCurrencyValue"
@@ -24,17 +35,30 @@
         android:layout_marginTop="300dp"
         android:layout_marginLeft="50dp"
         android:hint="RUB"
+        android:text="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/currencySpinner"
+        android:layout_width="130dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="307dp"
+        android:layout_marginLeft="130dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/resultValueCurrency"
         android:layout_width="100dp"
         android:layout_height="30dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="452dp" />
-
+        android:layout_marginTop="350dp"
+        android:layout_marginLeft="140dp"
+        style="@style/SecondaryTextStyle"
+        android:text=""
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 
     <Button

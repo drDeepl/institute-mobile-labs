@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.labs.lab3.api.CurrencyExchange
 import java.util.Random
 
 class MainActivity : AppCompatActivity() {
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
             var intent: Intent = Intent(this, SecondActivity::class.java)
             startActivity(intent)
         }
+
     }
     fun toChangeText(text: String) {
         var textCat: TextView = findViewById(R.id.textCat)

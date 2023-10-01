@@ -6,6 +6,12 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
+    <style name="SecondaryTextStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:color">@color/primary</item>
+
+    </style>
+
     <style name="DiceStyle">
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_marginBottom">85dp</item>
