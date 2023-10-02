@@ -34,6 +34,12 @@ class SecondActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val btnCarPriceCalActivity: Button = findViewById<Button>(R.id.btn_activity_car_price_calc)
+        btnCarPriceCalActivity.setOnClickListener {
+            val intent: Intent = Intent(this, CarPriceCalcActivity::class.java)
+            startActivity(intent)
+        }
+
         val utils: Utils = Utils()
 
         var currencyExchange: CurrencyExchange = CurrencyExchange("RUB")

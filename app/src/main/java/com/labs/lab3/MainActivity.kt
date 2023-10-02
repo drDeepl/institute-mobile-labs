@@ -23,8 +23,8 @@ class MainActivity : AppCompatActivity() {
         diceBtn.setOnClickListener {
             rollDice()
         }
-        val nextActivityBtn: Button = findViewById(R.id.btn_next_activity)
-        nextActivityBtn.setOnClickListener {
+        val btnCalcCurrencyActivity: Button = findViewById(R.id.btn_cal_currency_activity)
+        btnCalcCurrencyActivity.setOnClickListener {
             var intent: Intent = Intent(this, SecondActivity::class.java)
             startActivity(intent)
         }

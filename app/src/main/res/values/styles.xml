@@ -16,4 +16,8 @@
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_marginBottom">85dp</item>
     </style>
+
+    <style name="PrimaryButton">
+        <item name="android:backgroundTint">@color/primary</item>
+    </style>
 </resources>
