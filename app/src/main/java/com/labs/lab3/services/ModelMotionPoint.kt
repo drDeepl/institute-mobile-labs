@@ -9,12 +9,14 @@ class ModelMotionPoint(private var x0: Double, private var y0:Double) {
 
         var newX: Double = x0;
         var newY: Double = y0;
-        for(_t in 0..t){
+        var _t: Int = 0
+        while(newY >= 0.0){
             newX += v0* Math.cos(alphaRadian) *_t
             newY += v0 * Math.sin(alphaRadian) * _t - (g*_t*_t/2)
+            _t += 1
 
         }
-        return  mapOf("x" to newX, "y" to newY)
+        return  mapOf("x" to Math.round(newX*100)/100.0, "y" to Math.round(newY*100)/100.0)
 
     }
 }

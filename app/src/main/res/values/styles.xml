@@ -20,4 +20,11 @@
     <style name="PrimaryButton">
         <item name="android:backgroundTint">@color/primary</item>
     </style>
+
+    <style name="ActionButton">
+        <item name="android:backgroundTint">@color/actionPrimary</item>
+        <item name="android:textColor">@color/secondary</item>
+    </style>
+
+
 </resources>

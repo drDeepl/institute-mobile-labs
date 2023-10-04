@@ -42,6 +42,13 @@ class CarPriceCalcActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val btnToModelMotionPoint: Button = findViewById(R.id.btn_activity_motion_point)
+        btnToModelMotionPoint.setOnClickListener {
+            var intent: Intent = Intent(this, ModelPointActivity::class.java)
+            startActivity(intent)
+
+        }
+
         var nameCar: TextView = findViewById(R.id.nameCar)
         var priceCar: TextView = findViewById(R.id.priceCar)
         setCar(nameCar,priceCar,currentCarId);

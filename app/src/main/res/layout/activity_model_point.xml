@@ -32,7 +32,7 @@
         android:id="@+id/currencySpinner"
         android:layout_width="200dp"
         android:layout_height="40dp"
-        android:layout_marginTop="307dp"
+        android:layout_marginTop="550dp"
         android:layout_marginLeft="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -41,7 +41,7 @@
         android:id = "@+id/inputV0"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="600dp"
         android:layout_marginLeft="20dp"
         android:hint="начальная скорость"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,20 +52,71 @@
         android:id = "@+id/inputAlpha"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="400dp"
+        android:layout_marginTop="650dp"
         android:layout_marginLeft="20dp"
         android:hint="угол броска"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
 
+    <EditText
+        android:id = "@+id/inputFlyTime"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="700dp"
+        android:layout_marginLeft="20dp"
+        android:hint="время полета"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/resultCoordsTitle"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="350dp"
+        android:layout_marginRight="200dp"
+        android:text="координаты точки:"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/SecondaryTextStyle"/>
+    <TextView
+        android:id="@+id/resultCoords"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="350dp"
+        android:layout_marginRight="20dp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/SecondaryTextStyle"/>
+
+
+
+
+
+
+
     <Button
         android:id="@+id/btn_calc_time_fly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="400dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginRight="100dp"
         android:text="рассчитать"
+        style="@style/ActionButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_calc_"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="250dp"
+        android:text="далее"
         style="@style/PrimaryButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
