@@ -24,6 +24,7 @@ import java.text.FieldPosition
 
 class SecondActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
@@ -47,12 +48,14 @@ class SecondActivity : AppCompatActivity() {
 
         inputCurrency.hint = currencyExchange.getBaseCurrency()
         val currencys: List<String> = currencyExchange.getCurrencys()
+
         var currencySpinner: Spinner = findViewById(R.id.currencySpinner)
+
         val adapterCurrency: ArrayAdapter<String> = ArrayAdapter(this,android.R.layout.simple_spinner_item, currencys)
+
         adapterCurrency.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         currencySpinner.setAdapter(adapterCurrency)
         var resultValueCurrency: TextView = findViewById(R.id.resultValueCurrency)
-        currencySpinner.onItemSelectedListener
 
         currencySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {

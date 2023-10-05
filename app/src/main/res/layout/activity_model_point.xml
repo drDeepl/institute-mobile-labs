@@ -27,21 +27,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/modelPointTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="480dp"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="5dp"
+        android:gravity="center"
+        style="@style/PrimaryStyle"/>
+
 
     <Spinner
-        android:id="@+id/currencySpinner"
-        android:layout_width="200dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="550dp"
-        android:layout_marginLeft="20dp"
+        android:id="@+id/spinnerModels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="400dp"
+        android:spinnerMode="dropdown"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id = "@+id/inputV0"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="600dp"
+        android:layout_marginTop="650dp"
         android:layout_marginLeft="20dp"
         android:hint="начальная скорость"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,23 +64,14 @@
         android:id = "@+id/inputAlpha"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="650dp"
+        android:layout_marginTop="700dp"
         android:layout_marginLeft="20dp"
         android:hint="угол броска"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
 
-    <EditText
-        android:id = "@+id/inputFlyTime"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="700dp"
-        android:layout_marginLeft="20dp"
-        android:hint="время полета"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+
 
     <TextView
         android:id="@+id/resultCoordsTitle"
@@ -85,17 +88,9 @@
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_marginBottom="350dp"
-        android:layout_marginRight="20dp"
-        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         style="@style/SecondaryTextStyle"/>
-
-
-
-
-
-
 
     <Button
         android:id="@+id/btn_calc_time_fly"
@@ -104,7 +99,7 @@
         android:layout_marginBottom="50dp"
         android:layout_marginRight="100dp"
         android:text="рассчитать"
-        style="@style/ActionButton"
+        style="@style/PrimaryButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

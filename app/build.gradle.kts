@@ -7,6 +7,7 @@ android {
     namespace = "com.labs.lab3"
     compileSdk = 33
 
+
     defaultConfig {
         applicationId = "com.labs.lab3"
         minSdk = 23
@@ -33,6 +34,8 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+
 }
 
 dependencies {
