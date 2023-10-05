@@ -29,7 +29,7 @@
 
     <TextView
         android:id="@+id/modelPointTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="480dp"
         android:text=""
@@ -37,6 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="5dp"
         android:gravity="center"
+        android:textAlignment="center"
         style="@style/PrimaryStyle"/>
 
 
@@ -71,12 +72,23 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
+    <EditText
+        android:id = "@+id/inputH"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="700dp"
+        android:layout_marginLeft="20dp"
+        android:hint="высота"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
 
 
     <TextView
         android:id="@+id/resultCoordsTitle"
         android:layout_width="200dp"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="350dp"
         android:layout_marginRight="200dp"
         android:text="координаты точки:"
@@ -97,7 +109,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
-        android:layout_marginRight="100dp"
+        android:layout_marginRight="200dp"
         android:text="рассчитать"
         style="@style/PrimaryButton"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -106,12 +118,25 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btn_calc_"
+        android:id="@+id/btn_calc_utility_bills_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="250dp"
         android:text="далее"
+        style="@style/PrimaryButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_activity_car_price_calc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+
+        android:text="назад"
         style="@style/PrimaryButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
