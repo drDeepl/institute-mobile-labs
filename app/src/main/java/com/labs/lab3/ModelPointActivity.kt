@@ -107,10 +107,6 @@ class ModelPointActivity : AppCompatActivity() {
             }
         }
 
-
-
-
-
     }
 
     private fun showText(text:String){
