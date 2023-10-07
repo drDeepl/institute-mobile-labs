@@ -29,7 +29,7 @@ class UtilityBillsActivity : AppCompatActivity() {
         1 to 22.36,
         2 to 65.60,
         3 to 2.64,
-        4 to 1248.42,
+        4 to 27.05,
         5 to 97.84
     )
 
@@ -51,7 +51,8 @@ class UtilityBillsActivity : AppCompatActivity() {
         "тко" to false,
     )
 
-
+    var summBills:Double = 0.0
+    var currentBillActive: String = " ";
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_utility_bills)
@@ -73,7 +74,7 @@ class UtilityBillsActivity : AppCompatActivity() {
         val warmBill: CheckBox = findViewById(R.id.warmBill)
         val tkoBill: CheckBox = findViewById(R.id.tkoBill)
         val billsItems: List<String> = tariffs.keys.toList().slice(0..3)
-
+        currentBillActive = billsItems[0]
         val spinnerBills: Spinner = findViewById(R.id.billForMeaterReadingSpinner)
         val adapterBills: ArrayAdapter<String> = ArrayAdapter(this,android.R.layout.simple_spinner_item, billsItems)
 
@@ -81,10 +82,18 @@ class UtilityBillsActivity : AppCompatActivity() {
         spinnerBills.setAdapter(adapterBills)
 
         spinnerBills.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 println("onItemSelected")
                 val selectedItem: String = spinnerBills.selectedItem.toString()
+                val tariffId: Int = tariffs.getValue(selectedItem)
+                calclulateTariff.put(currentBillActive, false)
+                currentBillActive = selectedItem
+                val price: String = utilityTariffs.getValue(tariffId).toString()
+                val tariffValue: String = tariffsHints.getValue(tariffId).toString()
+//                currentOptionView.text = selectedItem + "\nтариф " + price + " " + tariffValue
                 calclulateTariff.put(selectedItem, true)
+                meterReading.hint = "показатели счетчика "  + tariffsHints.getValue(tariffId).toString().split("/")[1]
                 changeActiveBills(meterReading, true)
 
             }
@@ -94,17 +103,27 @@ class UtilityBillsActivity : AppCompatActivity() {
                     calclulateTariff.put(billsItems[i], false)
                 }
                 changeActiveBills(meterReading, false)
+                val resultText: TextView = findViewById(R.id.resultValue)
+                resultText.text = ""
+
             }
         }
 
 
         warmBill.setOnCheckedChangeListener{_,isChecked->
-            calclulateTariff.put(warmBill.text.toString(), true)
+            calclulateTariff.put(warmBill.text.toString(), isChecked)
+
+
+
+
             changeActiveBills(areaEdit,isChecked)
         }
 
         tkoBill.setOnCheckedChangeListener{_,isChecked->
-            calclulateTariff.put(tkoBill.text.toString(), true)
+            calclulateTariff.put(tkoBill.text.toString(), isChecked)
+
+
+
             changeActiveBills(countPeople,isChecked)
         }
 
@@ -112,42 +131,39 @@ class UtilityBillsActivity : AppCompatActivity() {
         btnCalcBill.setOnClickListener {
             val resultText: TextView = findViewById(R.id.resultValue)
             val utils: Utils = Utils()
-            var resultValue: Double = 0.0
+            summBills = 0.0
             resultText.text = ""
             val bills: List<String> = calclulateTariff.keys.toList()
             for(i in 0..<bills.size){
                 val billName: String = bills[i]
-                val tariffId: Int = tariffs.getValue(billName)
-                if(tariffId <= 3){
-                    val materReading: String = meterReading.text.toString().trim()
-                    if(utils.isNumeric(materReading)){
-                        val valueMaterReading: Double = materReading.toDouble()
-                        var tariffValue: Double = utilityTariffs.getValue(tariffId)
-                        resultValue += valueMaterReading * tariffValue
-                    }
-                }
+                val tariffIsChoice: Boolean = calclulateTariff.getValue(billName)
+                if(tariffIsChoice){
+                    val tariffId:Int = tariffs.getValue(billName)
+                    val price: Double = utilityTariffs.getValue(tariffId)
+                    if(tariffId <= 3){
+                        val meterReadingValue: String = meterReading.text.toString()
+                        if(utils.isNumeric(meterReadingValue)){
+                            summBills += meterReadingValue.toDouble() * price
 
-                else if(tariffId == 4){
-                    val area: String = areaEdit.text.toString().trim()
-                    if(utils.isNumeric(area)){
-                        val valueArea: Double = area.toDouble()
-                        var tariffValue: Double = utilityTariffs.getValue(tariffId)
-                        resultValue += valueArea * tariffValue
+                        }
                     }
-                }
+                    else if(tariffId == 4){
+                        val areaEditValue: String = areaEdit.text.toString()
+                        if(utils.isNumeric(areaEditValue)){
+                            summBills += areaEditValue.toDouble() * price
+                        }
+                    }
+                    else if(tariffId == 5){
+                        val countPeopleValue: String = countPeople.text.toString()
+                        if(utils.isNumeric(countPeopleValue)){
+                            summBills += countPeopleValue.toInt() * price
+                        }
 
-                else if(tariffId == 5){
-                    val peopleCount: String = countPeople.text.toString().trim()
-                    if(utils.isNumeric(peopleCount)){
-                        val valuePeople: Double = peopleCount.toDouble()
-                        var tariffValue: Double = utilityTariffs.getValue(tariffId)
-                        resultValue += valuePeople * tariffValue
                     }
                 }
             }
 
-
-            resultText.text = "Итого к оплате:\n" + utils.roundTo2Number(resultValue).toString() + " руб."
+            resultText.text = "Итого к оплате:\n" + utils.roundTo2Number(summBills).toString() + " руб."
 
         }
 
