@@ -6,9 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.yandex.mapkit.mapview.MapView
-        android:id="@+id/mapview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <TextView
+        android:id="@+id/text_coords"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="150dp"
+        android:textColor="@color/black"
+        android:text="coords"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <Button
+        android:id="@+id/btn_find_transport"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="350dp"
+        android:backgroundTint="@color/yellow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="найти транспорт"
+        android:textColor="@color/black"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
