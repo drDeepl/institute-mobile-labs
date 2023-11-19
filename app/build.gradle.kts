@@ -43,7 +43,9 @@ dependencies {
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("com.yandex.android:maps.mobile:4.3.1-full")
+    implementation ("io.github.microutils:kotlin-logging-jvm:2.0.11")
 
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     testImplementation("junit:junit:4.13.2")

@@ -1,5 +1,7 @@
 package com.example.lab5v2
 
+
+
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -11,6 +13,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Half.toFloat
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -20,11 +23,17 @@ import com.example.lab5v2.databinding.ActivityMainBinding
 import com.example.lab5v2.service.RentLocationListener
 import com.example.lab5v2.service.interfaces.LocationListenerI
 import com.google.android.gms.common.api.internal.ApiKey
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
+import mu.KotlinLogging
+import org.slf4j.LoggerFactory
+import org.slf4j.Logger
 
-class MainActivity : AppCompatActivity(), LocationListenerI {
-    private lateinit var locationManager: LocationManager
+class MainActivity : AppCompatActivity() {
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val REQUEST_CODE_PERMISSIONS: Int = 100
     private lateinit var rentLocationListener: RentLocationListener
     private val secondsToGetGps: Long = 2
@@ -32,6 +41,9 @@ class MainActivity : AppCompatActivity(), LocationListenerI {
     private var currentLatitude: Double = 0.0
     private var currentLongitude: Double = 0.0
     private lateinit var textCoords: TextView
+    private val logger: Logger = LoggerFactory.getLogger("MainActivity")
+    private val TAG = this.javaClass.simpleName
+
 
 
 
@@ -43,54 +55,36 @@ class MainActivity : AppCompatActivity(), LocationListenerI {
 
         val btnFindTransport: Button = findViewById<Button>(R.id.btn_find_transport)
         btnFindTransport.setOnClickListener{
-            checkPermission()
-//            val intent = Intent(this, MapActivity::class.java)
-//            startActivity(intent)
+//            fetchLocation()
+
+            val intent = Intent(this, MapActivity::class.java)
+            startActivity(intent)
         }
 
-    }
-
-    override fun onLocationChanged(location: Location) {
-        TODO("Not yet implemented")
-//        if(location.hasSpeed()){
-            currentLatitude = location.latitude
-            currentLongitude = location.longitude
-        findViewById<TextView>(R.id.text_coords).text = "Latitude: $currentLatitude\nLongitude: $currentLongitude"
-//            Toast.makeText(this, "Latitude: $currentLatitude\nLongitude: $currentLongitude", Toast.LENGTH_SHORT).show()
-//        }
     }
 
     private fun init(){
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        rentLocationListener = RentLocationListener()
-        rentLocationListener.setLocationListenerI(this)
-        checkPermission()
+        Log.i(TAG, "INIT")
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         textCoords = findViewById(R.id.text_coords)
 
-    }
-    private fun checkPermission(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            requestPermissions(arrayOf<String>(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE_PERMISSIONS)
-        }
-        else{
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, secondsToGetGps,distanceToGetGps, rentLocationListener)
 
-        }
+
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == REQUEST_CODE_PERMISSIONS && grantResults[0] == RESULT_OK){
-            checkPermission()
+    private fun fetchLocation(){
+        Log.i(TAG, "FETCH LOCATION")
+        val taskLocation: Task<Location> = fusedLocationProviderClient.lastLocation
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_CODE_PERMISSIONS)
         }
-        else{
-            Toast.makeText(this, "для получения транспорта рядом с вами необходимо дать разрешение на определение местоположения", Toast.LENGTH_SHORT).show()
 
+        taskLocation.addOnSuccessListener {
+            if(it != null){
+                textCoords.text = "${it.latitude} ${it.longitude}"
+                Toast.makeText(applicationContext, "${it.latitude} ${it.longitude}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
-
 }
