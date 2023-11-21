@@ -1,49 +1,42 @@
 package com.example.lab5v2
 
 
-
-import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Build
+
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Half.toFloat
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.example.lab5v2.databinding.ActivityMainBinding
-import com.example.lab5v2.service.RentLocationListener
-import com.example.lab5v2.service.interfaces.LocationListenerI
-import com.google.android.gms.common.api.internal.ApiKey
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.Task
-import com.yandex.mapkit.MapKit
-import com.yandex.mapkit.MapKitFactory
-import mu.KotlinLogging
 import org.slf4j.LoggerFactory
 import org.slf4j.Logger
 
+
 class MainActivity : AppCompatActivity() {
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
     private val REQUEST_CODE_PERMISSIONS: Int = 100
-    private lateinit var rentLocationListener: RentLocationListener
-    private val secondsToGetGps: Long = 2
-    private val distanceToGetGps: Float = 1.0f
-    private var currentLatitude: Double = 0.0
-    private var currentLongitude: Double = 0.0
     private lateinit var textCoords: TextView
     private val logger: Logger = LoggerFactory.getLogger("MainActivity")
     private val TAG = this.javaClass.simpleName
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
 
 
 
@@ -52,10 +45,30 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         init()
 
+        locationRequest = LocationRequest()
+        locationRequest.interval = 3000
+        locationRequest.fastestInterval = 3000
+        locationRequest.smallestDisplacement = 5f // 5m
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+        locationCallback = object: LocationCallback(){
+            override fun onLocationResult(locationResult: LocationResult?){
+                locationResult ?: return
+                if(locationResult.locations.isNotEmpty()){
+                    val location = locationResult.lastLocation
+                    textCoords.text = location.toString()
+
+                }
+            }
+
+        }
+
+
+
+
 
         val btnFindTransport: Button = findViewById<Button>(R.id.btn_find_transport)
         btnFindTransport.setOnClickListener{
-//            fetchLocation()
 
             val intent = Intent(this, MapActivity::class.java)
             startActivity(intent)
@@ -65,26 +78,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun init(){
         Log.i(TAG, "INIT")
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         textCoords = findViewById(R.id.text_coords)
-
-
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
     }
+    private fun isLocationEnabled(): Boolean{
+        var locationManager: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-    private fun fetchLocation(){
-        Log.i(TAG, "FETCH LOCATION")
-        val taskLocation: Task<Location> = fusedLocationProviderClient.lastLocation
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_CODE_PERMISSIONS)
-        }
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
 
-        taskLocation.addOnSuccessListener {
-            if(it != null){
-                textCoords.text = "${it.latitude} ${it.longitude}"
-                Toast.makeText(applicationContext, "${it.latitude} ${it.longitude}", Toast.LENGTH_SHORT).show()
-            }
+    private fun checkPermissions(): Boolean {
+        Log.i(TAG, "CHECK PERMISSIONS")
+        if (ActivityCompat.checkSelfPermission(
+                this, android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            return true
         }
+        return false
     }
 }
