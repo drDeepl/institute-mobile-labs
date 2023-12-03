@@ -1,6 +1,7 @@
 package com.example.lab5v2
 
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -23,84 +24,83 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.CancellationToken
+import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.tasks.OnTokenCanceledListener
 import org.slf4j.LoggerFactory
 import org.slf4j.Logger
 
 
 class MainActivity : AppCompatActivity() {
 
+
     private val REQUEST_CODE_PERMISSIONS: Int = 100
-    private lateinit var textCoords: TextView
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val logger: Logger = LoggerFactory.getLogger("MainActivity")
     private val TAG = this.javaClass.simpleName
-
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationRequest: LocationRequest
-    private lateinit var locationCallback: LocationCallback
-
-
+    private lateinit var textCoords: TextView;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val btnFindTransport: Button = findViewById(R.id.btn_find_transport)
         init()
 
-        locationRequest = LocationRequest()
-        locationRequest.interval = 3000
-        locationRequest.fastestInterval = 3000
-        locationRequest.smallestDisplacement = 5f // 5m
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-
-        locationCallback = object: LocationCallback(){
-            override fun onLocationResult(locationResult: LocationResult?){
-                locationResult ?: return
-                if(locationResult.locations.isNotEmpty()){
-                    val location = locationResult.lastLocation
-                    textCoords.text = location.toString()
-
-                }
+        btnFindTransport.setOnClickListener {
+            if (isGpsEnabled(baseContext)) {
+                getLocation()
+            } else {
+                Toast.makeText(this, "GPS is off", Toast.LENGTH_LONG).show()
             }
 
         }
-
-
-
-
-
-        val btnFindTransport: Button = findViewById<Button>(R.id.btn_find_transport)
-        btnFindTransport.setOnClickListener{
-
-            val intent = Intent(this, MapActivity::class.java)
-            startActivity(intent)
-        }
-
     }
 
-    private fun init(){
-        Log.i(TAG, "INIT")
-        textCoords = findViewById(R.id.text_coords)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-    }
-    private fun isLocationEnabled(): Boolean{
-        var locationManager: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    private fun init() {
+        logger.info("INIT")
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        textCoords = findViewById<TextView>(R.id.text_coords)
     }
 
-    private fun checkPermissions(): Boolean {
-        Log.i(TAG, "CHECK PERMISSIONS")
+    private fun getLocation() {
         if (ActivityCompat.checkSelfPermission(
-                this, android.Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
-            return true
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                REQUEST_CODE_PERMISSIONS
+            )
+            return
         }
-        return false
+
+        fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, object : CancellationToken() {
+            override fun onCanceledRequested(p0: OnTokenCanceledListener) = CancellationTokenSource().token
+
+            override fun isCancellationRequested() = false
+        })
+            .addOnSuccessListener { location: Location? ->
+                if (location == null)
+                    Toast.makeText(this, "Не удаётся получить текущие координаты", Toast.LENGTH_SHORT).show()
+                else {
+                    val lat = location.latitude
+                    val lon = location.longitude
+                    Toast.makeText(this, "${lat}\t${lon}", Toast.LENGTH_LONG).show()
+                }
+        }
+
+    }
+
+    private fun isGpsEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 }
