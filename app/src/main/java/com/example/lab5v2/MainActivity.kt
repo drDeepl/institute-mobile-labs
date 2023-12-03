@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private val logger: Logger = LoggerFactory.getLogger("MainActivity")
     private val TAG = this.javaClass.simpleName
     private lateinit var textCoords: TextView;
+    private var currCoords: HashMap<String,Double?> = hashMapOf("lat" to null, "long" to null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +50,18 @@ class MainActivity : AppCompatActivity() {
         btnFindTransport.setOnClickListener {
             if (isGpsEnabled(baseContext)) {
                 getLocation()
+                if(currCoords.get("lat") != null && currCoords.get("long") != null){
+                    Toast.makeText(this, "${currCoords.get("lat")}\t${currCoords.get("long")}", Toast.LENGTH_LONG).show()
+                    val intent: Intent = Intent(this, MapActivity::class.java)
+                    intent.putExtra("lat", currCoords.get("lat"))
+                    intent.putExtra("long", currCoords.get("long"))
+                    startActivity(intent)
+                }
+                else{
+                    Toast.makeText(this, "Что-то пошло не так. Повтори попытку чуть позже", Toast.LENGTH_LONG).show()
+                }
+
+
             } else {
                 Toast.makeText(this, "GPS is off", Toast.LENGTH_LONG).show()
             }
@@ -60,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         logger.info("INIT")
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         textCoords = findViewById<TextView>(R.id.text_coords)
+        getLocation()
     }
 
     private fun getLocation() {
@@ -79,7 +93,6 @@ class MainActivity : AppCompatActivity() {
                 ),
                 REQUEST_CODE_PERMISSIONS
             )
-            return
         }
 
         fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, object : CancellationToken() {
@@ -88,15 +101,18 @@ class MainActivity : AppCompatActivity() {
             override fun isCancellationRequested() = false
         })
             .addOnSuccessListener { location: Location? ->
-                if (location == null)
+                if (location == null){
                     Toast.makeText(this, "Не удаётся получить текущие координаты", Toast.LENGTH_SHORT).show()
+
+                }
                 else {
                     val lat = location.latitude
                     val lon = location.longitude
-                    Toast.makeText(this, "${lat}\t${lon}", Toast.LENGTH_LONG).show()
+//                    Toast.makeText(this, "${lat}\t${lon}", Toast.LENGTH_LONG).show()
+                    currCoords.put("lat", lat)
+                    currCoords.put("long", lon)
                 }
         }
-
     }
 
     private fun isGpsEnabled(context: Context): Boolean {

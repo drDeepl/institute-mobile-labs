@@ -25,13 +25,18 @@ class MapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initMap(savedInstanceState)
-        pointOnMap = mapView.map.mapObjects.addPlacemark(
-            Point(53.758455, 87.119102)
-        )
-        pointOnMap.setIconStyle(IconStyle().setScale(4f))
-        pointOnMap.setText("вы сейчас тут")
 
-        mapView.map.move(CameraPosition(Point(53.758455, 87.119102), 15f, 0f, 0f), Animation(Animation.Type.SMOOTH, 10f), null)
+        val currentLatitude: Double = intent.getDoubleExtra("lat", 0.0)
+        val currentLongitude: Double = intent.getDoubleExtra("long", 0.0)
+        pointOnMap = mapView.map.mapObjects.addPlacemark(
+            Point(currentLatitude, currentLongitude)
+        )
+
+        pointOnMap.setIconStyle(IconStyle().setScale(3f))
+
+
+
+        mapView.map.move(CameraPosition(Point(currentLatitude, currentLongitude), 17f, 0f, 0f), Animation(Animation.Type.SMOOTH, 10f), null)
 
 
 
