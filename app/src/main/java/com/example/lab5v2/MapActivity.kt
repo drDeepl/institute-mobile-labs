@@ -1,8 +1,10 @@
 package com.example.lab5v2
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.lab5v2.databinding.ActivityMapBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
@@ -25,25 +27,29 @@ class MapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initMap(savedInstanceState)
-
         val currentLatitude: Double = intent.getDoubleExtra("lat", 0.0)
         val currentLongitude: Double = intent.getDoubleExtra("long", 0.0)
         pointOnMap = mapView.map.mapObjects.addPlacemark(
             Point(currentLatitude, currentLongitude)
         )
-
         pointOnMap.setIconStyle(IconStyle().setScale(3f))
-
-
-
         mapView.map.move(CameraPosition(Point(currentLatitude, currentLongitude), 17f, 0f, 0f), Animation(Animation.Type.SMOOTH, 10f), null)
-
-
-
+        mainInit()
 
     }
 
 
+    private fun mainInit(){
+        val navigationBottom: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        navigationBottom.setOnNavigationItemReselectedListener { item ->
+            when(item.itemId) {
+                R.id.to_main_activity -> {
+                    val intent: Intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
+    }
     private fun initMap(savedInstanceState: Bundle?){
         setApiKey(savedInstanceState)
         MapKitFactory.initialize(this)
