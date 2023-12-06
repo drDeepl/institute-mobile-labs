@@ -7,14 +7,16 @@
         android:icon="@drawable/find_transport_icon"/>
 
     <item
+        android:id="@+id/to_main_activity"
+        android:enabled="true"
+        android:icon="@drawable/house_icon"/>
+
+    <item
         android:id="@+id/to_profile"
         android:enabled="true"
         android:icon="@drawable/avatar_icon"/>
 
-    <item
-        android:id="@+id/to_main_activity"
-        android:enabled="true"
-        android:icon="@drawable/house_icon"/>
+
 
 
 </menu>

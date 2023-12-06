@@ -2,7 +2,12 @@ package com.example.lab5v2
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.lab5v2.api.ServiceBuilder
+import com.example.lab5v2.api.interfaces.ApiInterface
+import com.example.lab5v2.api.models.AccountSignInModel
+import com.example.lab5v2.api.models.TokenModel
 import com.example.lab5v2.databinding.ActivityMapBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.yandex.mapkit.Animation
@@ -14,6 +19,9 @@ import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.PlacemarkMapObject
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.image.ImageProvider
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MapActivity : AppCompatActivity() {
@@ -22,6 +30,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
     private lateinit var mapKit: MapKit
     private lateinit var pointOnMap: PlacemarkMapObject
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +44,8 @@ class MapActivity : AppCompatActivity() {
         pointOnMap.setIconStyle(IconStyle().setScale(3f))
         mapView.map.move(CameraPosition(Point(currentLatitude, currentLongitude), 17f, 0f, 0f), Animation(Animation.Type.SMOOTH, 10f), null)
         mainInit()
+
+
 
     }
 
@@ -57,6 +68,8 @@ class MapActivity : AppCompatActivity() {
         setContentView(binding.root)
         mapKit = MapKitFactory.getInstance()
         mapView = findViewById(R.id.mapview)
+
+
 
     }
 

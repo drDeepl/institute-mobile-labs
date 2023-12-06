@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+
+
 android {
     namespace = "com.example.lab5v2"
     compileSdk = 33
@@ -47,6 +49,9 @@ dependencies {
     implementation("com.yandex.android:maps.mobile:4.3.1-full")
     implementation ("io.github.microutils:kotlin-logging-jvm:2.0.11")
     implementation ("io.getstream:avatarview-coil:1.0.3")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
 
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")

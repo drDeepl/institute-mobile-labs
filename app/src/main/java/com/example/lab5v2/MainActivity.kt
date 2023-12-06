@@ -2,34 +2,35 @@ package com.example.lab5v2
 
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-
-
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import com.example.lab5v2.api.ServiceBuilder
+import com.example.lab5v2.api.interfaces.ApiInterface
+import com.example.lab5v2.api.models.AccountSignInModel
+import com.example.lab5v2.api.models.TokenModel
+
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
+
 import org.slf4j.LoggerFactory
 import org.slf4j.Logger
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MainActivity : AppCompatActivity() {
@@ -37,8 +38,10 @@ class MainActivity : AppCompatActivity() {
 
     private val REQUEST_CODE_PERMISSIONS: Int = 100
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private val logger: Logger = LoggerFactory.getLogger("MainActivity")
+    private val LOGGER: Logger = LoggerFactory.getLogger("MainActivity")
     private val TAG = this.javaClass.simpleName
+
+
 
     private var currCoords: HashMap<String,Double?> = hashMapOf("lat" to null, "long" to null)
 
@@ -52,6 +55,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.to_find_transport -> {
                     setCurrentLocationOnMap()
                 }
+                R.id.to_profile-> {
+                    toProfileActivity()
+                }
             }
         }
 
@@ -61,6 +67,8 @@ class MainActivity : AppCompatActivity() {
             setCurrentLocationOnMap()
 
         }
+
+
     }
 
     private fun setCurrentLocationOnMap(){
@@ -80,10 +88,21 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "GPS is off", Toast.LENGTH_LONG).show()
         }
     }
+
+    private fun toProfileActivity(){
+        val intent: Intent = Intent(this, LogInActivity::class.java)
+        startActivity(intent)
+
+    }
     private fun init() {
-        logger.info("INIT")
+        LOGGER.info("INIT")
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         getLocation()
+
+
+
+
+
 
     }
 
