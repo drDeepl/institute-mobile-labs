@@ -11,12 +11,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.example.lab5v2.api.ServiceBuilder
 import com.example.lab5v2.api.interfaces.ApiInterface
 import com.example.lab5v2.api.models.AccountSignInModel
 import com.example.lab5v2.api.models.TokenModel
+import com.example.lab5v2.service.TokenService
 
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val LOGGER: Logger = LoggerFactory.getLogger("MainActivity")
     private val TAG = this.javaClass.simpleName
+    private lateinit var tokenService: TokenService;
 
 
 
@@ -98,10 +101,8 @@ class MainActivity : AppCompatActivity() {
         LOGGER.info("INIT")
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         getLocation()
-
-
-
-
+        tokenService = TokenService(this)
+        findViewById<TextView>(R.id.accessTokenTest).text = tokenService.getAccessToken()
 
 
     }

@@ -18,10 +18,6 @@ import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.PlacemarkMapObject
 import com.yandex.mapkit.mapview.MapView
-import com.yandex.runtime.image.ImageProvider
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class MapActivity : AppCompatActivity() {

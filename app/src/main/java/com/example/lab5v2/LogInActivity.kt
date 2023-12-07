@@ -10,6 +10,7 @@ import com.example.lab5v2.api.ServiceBuilder
 import com.example.lab5v2.api.interfaces.ApiInterface
 import com.example.lab5v2.api.models.AccountSignInModel
 import com.example.lab5v2.api.models.TokenModel
+import com.example.lab5v2.service.TokenService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,21 +20,27 @@ class LogInActivity : AppCompatActivity() {
     private lateinit var usernameEditText: EditText
     private lateinit var logInBtn: Button
     private val TAG = this.javaClass.simpleName
+    private lateinit var tokenService: TokenService;
+    private  var accessToken: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
         init()
         logInBtn.setOnClickListener {
-            val response = ServiceBuilder.buildService(ApiInterface::class.java)
+            val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
             val accountSignInModel: AccountSignInModel = AccountSignInModel(passwordUserEditText.text.toString(), usernameEditText.text.toString())
 
-            response.signin(accountSignInModel).enqueue(
+            retrofit.signin(accountSignInModel).enqueue(
                 object: Callback<TokenModel> {
                     override fun onResponse(call: Call<TokenModel>, response: Response<TokenModel>) {
 
 
-                        Toast.makeText(this@LogInActivity, "${response.message()}", Toast.LENGTH_LONG ).show()
+
+                        val token: String = response.body()?.token.toString()
+                        tokenService.saveAccessToken(token)
+                        Toast.makeText(this@LogInActivity, "ТОКЕН СОХРАНЕН", Toast.LENGTH_LONG ).show()
+
                     }
 
                     override fun onFailure(call: Call<TokenModel>, t: Throwable) {
@@ -55,5 +62,10 @@ class LogInActivity : AppCompatActivity() {
         passwordUserEditText = findViewById(R.id.password_edit_text)
         usernameEditText = findViewById(R.id.username_edit_text)
         logInBtn = findViewById(R.id.btn_log_in)
+        tokenService = TokenService(this)
+        accessToken = tokenService.getAccessToken()
+
+
     }
+
 }
