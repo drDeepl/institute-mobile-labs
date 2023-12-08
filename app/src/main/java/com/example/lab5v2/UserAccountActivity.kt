@@ -15,7 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LogInActivity : AppCompatActivity() {
+class UserAccountActivity : AppCompatActivity() {
     private lateinit var passwordUserEditText: EditText
     private lateinit var usernameEditText: EditText
     private lateinit var logInBtn: Button
@@ -25,7 +25,7 @@ class LogInActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_log_in)
+        setContentView(R.layout.activity_user_account)
         init()
         logInBtn.setOnClickListener {
             val retrofit = ServiceBuilder.buildService(ApiInterface::class.java)
@@ -39,12 +39,12 @@ class LogInActivity : AppCompatActivity() {
 
                         val token: String = response.body()?.token.toString()
                         tokenService.saveAccessToken(token)
-                        Toast.makeText(this@LogInActivity, "ТОКЕН СОХРАНЕН", Toast.LENGTH_LONG ).show()
+                        Toast.makeText(this@UserAccountActivity, "ТОКЕН СОХРАНЕН", Toast.LENGTH_LONG ).show()
 
                     }
 
                     override fun onFailure(call: Call<TokenModel>, t: Throwable) {
-                        Toast.makeText(this@LogInActivity, "Ошибка при входе", Toast.LENGTH_LONG ).show()
+                        Toast.makeText(this@UserAccountActivity, "Ошибка при входе", Toast.LENGTH_LONG ).show()
                         Log.e(TAG, t.message.toString())
 
                     }

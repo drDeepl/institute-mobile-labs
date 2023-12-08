@@ -9,15 +9,10 @@ import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import com.example.lab5v2.api.ServiceBuilder
-import com.example.lab5v2.api.interfaces.ApiInterface
-import com.example.lab5v2.api.models.AccountSignInModel
-import com.example.lab5v2.api.models.TokenModel
 import com.example.lab5v2.service.TokenService
 
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -30,9 +25,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 import org.slf4j.LoggerFactory
 import org.slf4j.Logger
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class MainActivity : AppCompatActivity() {
@@ -52,24 +44,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val btnFindTransport: Button = findViewById(R.id.btn_find_transport)
+        btnFindTransport.setOnClickListener {
+            setCurrentLocationOnMap()
+        }
         val navigationBottom: BottomNavigationView = findViewById(R.id.bottom_navigation)
-        navigationBottom.setOnNavigationItemReselectedListener { item ->
+
+
+        navigationBottom.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.to_find_transport -> {
                     setCurrentLocationOnMap()
-                }
-                R.id.to_profile-> {
-                    toProfileActivity()
-                }
-            }
-        }
 
+                }
+                R.id.to_profile-> toProfileActivity()
+
+            }
+            true
+        }
+//
         init()
 
-        btnFindTransport.setOnClickListener {
-            setCurrentLocationOnMap()
 
-        }
 
 
     }
@@ -92,8 +87,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+
     private fun toProfileActivity(){
-        val intent: Intent = Intent(this, LogInActivity::class.java)
+        val intent: Intent = Intent(this, UserAccountActivity::class.java)
         startActivity(intent)
 
     }

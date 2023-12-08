@@ -48,13 +48,14 @@ class MapActivity : AppCompatActivity() {
 
     private fun mainInit(){
         val navigationBottom: BottomNavigationView = findViewById(R.id.bottom_navigation)
-        navigationBottom.setOnNavigationItemReselectedListener { item ->
+        navigationBottom.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.to_main_activity -> {
                     val intent: Intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
             }
+            true
         }
     }
     private fun initMap(savedInstanceState: Bundle?){

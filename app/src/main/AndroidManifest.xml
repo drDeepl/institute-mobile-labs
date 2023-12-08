@@ -19,7 +19,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".LogInActivity"
+            android:name=".UserAccountActivity"
             android:exported="false" />
         <activity
             android:name=".MapActivity"
