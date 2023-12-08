@@ -65,9 +65,6 @@ class MapActivity : AppCompatActivity() {
         setContentView(binding.root)
         mapKit = MapKitFactory.getInstance()
         mapView = findViewById(R.id.mapview)
-
-
-
     }
 
     override fun onSaveInstanceState(outState: Bundle){
@@ -94,5 +91,16 @@ class MapActivity : AppCompatActivity() {
         binding.mapview.onStop()
         MapKitFactory.getInstance().onStop()
         super.onStop()
+    }
+
+    private fun toProfileActivity(){
+        val intent: Intent = Intent(this, UserAccountActivity::class.java)
+        startActivity(intent)
+
+    }
+    private fun toMainActivity(){
+        val intent: Intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+
     }
 }

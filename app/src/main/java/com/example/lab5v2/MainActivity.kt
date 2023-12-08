@@ -47,9 +47,8 @@ class MainActivity : AppCompatActivity() {
         btnFindTransport.setOnClickListener {
             setCurrentLocationOnMap()
         }
+
         val navigationBottom: BottomNavigationView = findViewById(R.id.bottom_navigation)
-
-
         navigationBottom.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.to_find_transport -> {
@@ -57,6 +56,7 @@ class MainActivity : AppCompatActivity() {
 
                 }
                 R.id.to_profile-> toProfileActivity()
+                R.id.to_main_activity -> toMainActivity()
 
             }
             true
@@ -89,11 +89,22 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
+
     private fun toProfileActivity(){
         val intent: Intent = Intent(this, UserAccountActivity::class.java)
         startActivity(intent)
 
     }
+    private fun toMainActivity(){
+        val intent: Intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+
+    }
+
+
+
+
     private fun init() {
         LOGGER.info("INIT")
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
