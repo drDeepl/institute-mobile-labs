@@ -30,8 +30,8 @@ class MapActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        initMap()
         super.onCreate(savedInstanceState)
-        initMap(savedInstanceState)
         val currentLatitude: Double = intent.getDoubleExtra("lat", 0.0)
         val currentLongitude: Double = intent.getDoubleExtra("long", 0.0)
         pointOnMap = mapView.map.mapObjects.addPlacemark(
@@ -58,8 +58,8 @@ class MapActivity : AppCompatActivity() {
             true
         }
     }
-    private fun initMap(savedInstanceState: Bundle?){
-        setApiKey(savedInstanceState)
+    private fun initMap(){
+        setApiKey()
         MapKitFactory.initialize(this)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -72,18 +72,15 @@ class MapActivity : AppCompatActivity() {
         outState.putBoolean("haveApiKey", true)
     }
 
-    private fun setApiKey(savedInstanceState: Bundle?){
-        val haveApiKey = savedInstanceState?.getBoolean("haveApiKey") ?: false
-
-        if(!haveApiKey){
-            MapKitFactory.setApiKey(API_KEY)
-        }
+    private fun setApiKey(){
+        MapKitFactory.setApiKey(API_KEY)
     }
 
     override fun onStart() {
-        super.onStart()
+
         MapKitFactory.getInstance().onStart()
         binding.mapview.onStart()
+        super.onStart()
     }
 
     // Останавливаем обработку карты, когда активити с картой становится невидимым для пользователя:
@@ -91,6 +88,7 @@ class MapActivity : AppCompatActivity() {
         binding.mapview.onStop()
         MapKitFactory.getInstance().onStop()
         super.onStop()
+
     }
 
     private fun toProfileActivity(){

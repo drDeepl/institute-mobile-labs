@@ -13,6 +13,9 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import android.provider.Settings
+import androidx.appcompat.app.AlertDialog
+
 import com.example.lab5v2.service.TokenService
 
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -35,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private val LOGGER: Logger = LoggerFactory.getLogger("MainActivity")
     private val TAG = this.javaClass.simpleName
     private lateinit var tokenService: TokenService;
+    private val REQUEST_CODE_GPS_SETTINGS = 101
 
 
 
@@ -45,7 +49,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val btnFindTransport: Button = findViewById(R.id.btn_find_transport)
         btnFindTransport.setOnClickListener {
-            setCurrentLocationOnMap()
+            if(isGpsEnabled(baseContext)){
+                getCurrentLocation()
+                setCurrentLocationOnMap()
+                }
+            else{
+                showEnableGPSDialog()
+
+            }
+
         }
 
         val navigationBottom: BottomNavigationView = findViewById(R.id.bottom_navigation)
@@ -53,25 +65,17 @@ class MainActivity : AppCompatActivity() {
             when(item.itemId) {
                 R.id.to_find_transport -> {
                     setCurrentLocationOnMap()
-
                 }
                 R.id.to_profile-> toProfileActivity()
                 R.id.to_main_activity -> toMainActivity()
-
             }
             true
         }
-//
         init()
-
-
-
-
     }
 
     private fun setCurrentLocationOnMap(){
-        if (isGpsEnabled(baseContext)) {
-            getLocation()
+
             if(currCoords.get("lat") != null && currCoords.get("long") != null){
                 Toast.makeText(this, "${currCoords.get("lat")}\t${currCoords.get("long")}", Toast.LENGTH_LONG).show()
                 val intent: Intent = Intent(this, MapActivity::class.java)
@@ -79,17 +83,26 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("long", currCoords.get("long"))
                 startActivity(intent)
             }
-            else{
-                Toast.makeText(this, "Что-то пошло не так. Повтори попытку чуть позже", Toast.LENGTH_LONG).show()
-            }
-        } else {
-            Toast.makeText(this, "GPS is off", Toast.LENGTH_LONG).show()
-        }
     }
 
 
-
-
+    private fun showEnableGPSDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Упс, у вас выключено отображение локации")
+            .setMessage("Чтобы показать ближайший транспорт доступный для аренды необходимо включить гео-локацию.\n\nПереключиться на страницу для включения локации? ")
+            .setCancelable(false)
+            .setPositiveButton("Да") { dialog, _ ->
+                val enableGPSIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivityForResult(enableGPSIntent, REQUEST_CODE_GPS_SETTINGS)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Нет") { dialog, _ ->
+                dialog.dismiss()
+                // Handle scenario when user chooses not to enable GPS
+            }
+        val alertDialog = builder.create()
+        alertDialog.show()
+    }
 
     private fun toProfileActivity(){
         val intent: Intent = Intent(this, UserAccountActivity::class.java)
@@ -108,14 +121,13 @@ class MainActivity : AppCompatActivity() {
     private fun init() {
         LOGGER.info("INIT")
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        getLocation()
+        getCurrentLocation()
         tokenService = TokenService(this)
         findViewById<TextView>(R.id.accessTokenTest).text = tokenService.getAccessToken()
-
-
     }
 
-    private fun getLocation() {
+
+    private fun getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -124,16 +136,8 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ),
-                REQUEST_CODE_PERMISSIONS
-            )
+            requestLocationPermission()
         }
-
         fusedLocationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, object : CancellationToken() {
             override fun onCanceledRequested(p0: OnTokenCanceledListener) = CancellationTokenSource().token
 
@@ -147,7 +151,6 @@ class MainActivity : AppCompatActivity() {
                 else {
                     val lat = location.latitude
                     val lon = location.longitude
-//                    Toast.makeText(this, "${lat}\t${lon}", Toast.LENGTH_LONG).show()
                     currCoords.put("lat", lat)
                     currCoords.put("long", lon)
                 }
@@ -157,5 +160,27 @@ class MainActivity : AppCompatActivity() {
     private fun isGpsEnabled(context: Context): Boolean {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ),
+            REQUEST_CODE_GPS_SETTINGS
+        )
+    }
+    override fun onResume() {
+        super.onResume()
+
+        // Проверяем разрешение на доступ к местоположению
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Разрешение не получено, запрашиваем его
+            requestLocationPermission()
+        } else {
+            // Разрешение получено, выполняем необходимые действия
+            setCurrentLocationOnMap()
+        }
     }
 }
