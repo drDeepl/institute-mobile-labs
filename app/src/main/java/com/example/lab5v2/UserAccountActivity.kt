@@ -1,35 +1,26 @@
 package com.example.lab5v2
 
 
-import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginStart
 import com.example.lab5v2.api.ServiceBuilder
 import com.example.lab5v2.api.interfaces.ApiInterface
-import com.example.lab5v2.api.models.Account
+import com.example.lab5v2.api.models.AccountModel
 import com.example.lab5v2.api.models.AccountSignInModel
 import com.example.lab5v2.api.models.TokenModel
 import com.example.lab5v2.service.TokenService
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 
 class UserAccountActivity : AppCompatActivity() {
@@ -61,22 +52,28 @@ class UserAccountActivity : AppCompatActivity() {
         logInBtn.setOnClickListener {
             logInBtn.visibility = View.VISIBLE
             logInBtn.visibility = View.GONE
+            var siginIsSuccess = false
             CoroutineScope(Dispatchers.Default).launch {
                 val response: Response<TokenModel> =  requestToSignIn()
                 if(response.code() == 200){
                     tokenService.saveAccessToken(response.body()!!.token)
-                    val response: Response<Account> = retrofit.me().execute()
-                    findViewById<TextView>(R.id.header_card_sign_in).text = response.code().toString()
-                    hideSignInForm()
-
+                    retrofit = ServiceBuilder.buildService(this@UserAccountActivity, ApiInterface::class.java)
+                    val responseCurrentUserInfo: Response<AccountModel> = requestToCurrentUserInfo()
+                    if(responseCurrentUserInfo.code() == 200){
+                        findViewById<TextView>(R.id.header_card_sign_in).text = "Привет, ${responseCurrentUserInfo.body()?.username.toString()}!"
+                        siginIsSuccess = true
+                    }
                 }
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     logInBtn.visibility = View.VISIBLE
+                    if(siginIsSuccess){
+                        toHideFormSignIn()
+                    }
+
+
                 }
             }
-
-//            Toast.makeText(this@UserAccountActivity, "${response.code()}", Toast.LENGTH_LONG ).show()
         }
     }
 
@@ -105,7 +102,6 @@ class UserAccountActivity : AppCompatActivity() {
 
     private fun hideSignInForm(){
         findViewById<CardView>(R.id.sign_in_form_card).visibility = View.GONE
-
     }
 
     private suspend fun requestToSignIn(): Response<TokenModel>{
@@ -113,13 +109,18 @@ class UserAccountActivity : AppCompatActivity() {
         return retrofit.signin(accountSignInModel).execute()
     }
 
+    private suspend fun requestToCurrentUserInfo(): Response<AccountModel>{
+        return retrofit.currentUserInfo().execute()
+    }
+
     private fun toHideFormSignIn(){
-        val cardSignIn: CardView = findViewById(R.id.sign_in_form_card)
-        cardSignIn.visibility = View.GONE
+        usernameEditText.visibility = View.GONE
+        passwordUserEditText.visibility = View.GONE
+        logInBtn.visibility = View.GONE
 
     }
 
-    private fun toShowAccountInfo(account: Account){
+    private fun toShowAccountInfo(account: AccountModel){
 //        TODO: dynamically added text view
     }
 
