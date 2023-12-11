@@ -18,6 +18,10 @@ import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.PlacemarkMapObject
 import com.yandex.mapkit.mapview.MapView
+import com.yandex.runtime.image.ImageProvider
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 class MapActivity : AppCompatActivity() {
@@ -37,7 +41,20 @@ class MapActivity : AppCompatActivity() {
         pointOnMap = mapView.map.mapObjects.addPlacemark(
             Point(currentLatitude, currentLongitude)
         )
+
+        val currentLocationPoint: Point = Point(currentLatitude, currentLongitude)
+        val points: List<Point> = generateRandomPointsAroundCurrentPoint(currentLocationPoint, 0.002, 5)
         pointOnMap.setIconStyle(IconStyle().setScale(3f))
+
+        for(i in 0 until points.size){
+            val transportPoint: Point = points.get(i)
+
+
+            var mark: PlacemarkMapObject = mapView.map.mapObjects.addPlacemark(transportPoint)
+            mark.setIcon(ImageProvider.fromResource(this, R.drawable.auto))
+            mark.setIconStyle(IconStyle().setScale(0.1F))
+
+        }
         mapView.map.move(CameraPosition(Point(currentLatitude, currentLongitude), 17f, 0f, 0f), Animation(Animation.Type.SMOOTH, 10f), null)
         mainInit()
 
@@ -65,6 +82,23 @@ class MapActivity : AppCompatActivity() {
         setContentView(binding.root)
         mapKit = MapKitFactory.getInstance()
         mapView = findViewById(R.id.mapview)
+    }
+
+    private fun generateRandomPointsAroundCurrentPoint(centerPoint: Point, radius:Double, numPoints: Int): List<Point>{
+        val points = mutableListOf<Point>()
+        val random = java.util.Random()
+        for (i in 0 until numPoints) {
+            val angle = random.nextDouble() * 2 * PI
+            val distance = random.nextDouble() * radius
+
+            val xOffset = distance * cos(angle)
+            val yOffset = distance * sin(angle)
+
+            val newPoint = Point(centerPoint.latitude + xOffset, centerPoint.longitude + yOffset)
+            points.add(newPoint)
+        }
+
+        return points
     }
 
     override fun onSaveInstanceState(outState: Bundle){
