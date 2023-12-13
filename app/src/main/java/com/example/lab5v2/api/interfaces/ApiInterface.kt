@@ -2,6 +2,7 @@ package com.example.lab5v2.api.interfaces
 
 import com.example.lab5v2.api.models.AccountModel
 import com.example.lab5v2.api.models.AccountSignInModel
+import com.example.lab5v2.api.models.MessageModel
 import com.example.lab5v2.api.models.TokenModel
 import retrofit2.Call
 import retrofit2.http.Body
@@ -16,4 +17,6 @@ interface ApiInterface {
     @GET("account/me")
     fun currentUserInfo(): Call<AccountModel>
 
+    @POST("account/signup")
+    fun signup(@Body requestModel: AccountSignInModel): Call<MessageModel>
 }

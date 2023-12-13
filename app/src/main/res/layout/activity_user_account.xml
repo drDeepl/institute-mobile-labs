@@ -8,7 +8,68 @@
     android:id="@+id/constraint_layout_account">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/sign_in_form_card"
+
+        android:id="@+id/card_form_welcome"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="200dp"
+        app:cardCornerRadius="18dp"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/header_card_welcome"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:textAlignment="center"
+            android:text="Привет!"
+            android:textStyle="bold"
+            android:textSize="31dp"
+            android:layout_gravity="center_horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+
+        <Button
+            android:id="@+id/btn_to_show_sign_up_form"
+            android:layout_width="180dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="180dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_header"
+            android:text="регистрация"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_to_show_log_in_form"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="240dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_header"
+            android:text="вход"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/login_in_form_card"
+        android:visibility="gone"
         android:layout_width="300dp"
         android:layout_height="400dp"
         android:layout_marginTop="200dp"
@@ -33,8 +94,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-
-
 
         <EditText
             android:id="@+id/username_edit_text"
@@ -66,19 +125,18 @@
             android:indeterminateTint="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_marginTop="240dp"
+            android:layout_marginTop="290dp"
             android:layout_gravity="center_horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-
         <Button
             android:id="@+id/btn_log_in"
             android:layout_width="150dp"
             android:layout_height="50dp"
-            android:layout_marginTop="240dp"
+            android:layout_marginTop="290dp"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/rounded_header"
             android:text="войти"
@@ -88,8 +146,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-
-
+        <Button
+            android:id="@+id/btn_sign_up"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="290dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_header"
+            android:text="зарегистрироваться"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.cardview.widget.CardView>
 
