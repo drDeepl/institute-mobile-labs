@@ -79,6 +79,7 @@ class UserAccountActivity : AppCompatActivity() {
             logInBtn.visibility = View.VISIBLE
             logInBtn.visibility = View.GONE
             var siginIsSuccess = false
+            var account: AccountModel? = null
             CoroutineScope(Dispatchers.Default).launch {
                 val response: Response<TokenModel> =  requestToSigIn()
                 Log.i(TAG, "${response.code()}")
@@ -90,6 +91,7 @@ class UserAccountActivity : AppCompatActivity() {
                     if(responseCurrentUserInfo.code() == 200){
                         findViewById<TextView>(R.id.header_card_sign_in).text = "Привет, ${responseCurrentUserInfo.body()?.username.toString()}!"
                         siginIsSuccess = true
+                        account = responseCurrentUserInfo.body()
                     }
                 }
                 withContext(Dispatchers.Main) {
@@ -98,6 +100,7 @@ class UserAccountActivity : AppCompatActivity() {
                     if(siginIsSuccess){
                         setVisibleLogInForm(View.GONE)
                         setVisibleWelcomeCard(View.GONE)
+                        toShowAccountInfo(account)
                     }
 
                 }
@@ -108,6 +111,7 @@ class UserAccountActivity : AppCompatActivity() {
             Log.i(TAG, "SET ON CLICK SIGN UP BTN")
             signUpBtn.visibility = View.GONE
             var signUpIsSuccess = false
+            var account: AccountModel? = null
             CoroutineScope(Dispatchers.Default).launch {
                 val response: Response<MessageModel> =  requestToSignUp()
                 Log.i(TAG, "AFTER RESPONSE")
@@ -119,9 +123,11 @@ class UserAccountActivity : AppCompatActivity() {
                         tokenService.saveAccessToken(responseSignIn.body()!!.token)
                         retrofit = ServiceBuilder.buildService(this@UserAccountActivity, ApiInterface::class.java)
                         val responseCurrentUserInfo: Response<AccountModel> = requestToCurrentUserInfo()
+                        account = responseCurrentUserInfo.body()
                         if(responseCurrentUserInfo.code() == 200){
                             findViewById<TextView>(R.id.header_card_sign_in).text = "Привет, ${responseCurrentUserInfo.body()?.username.toString()}!"
                             signUpIsSuccess = true
+
                         }
                     }
                 }
@@ -130,6 +136,7 @@ class UserAccountActivity : AppCompatActivity() {
                     logInBtn.visibility = View.VISIBLE
                     if(signUpIsSuccess){
                         setVisibleLogInForm(View.GONE)
+                        toShowAccountInfo(account)
 
                     }
                     else{
@@ -190,8 +197,12 @@ class UserAccountActivity : AppCompatActivity() {
         findViewById<CardView>(R.id.card_form_welcome).visibility = visible
     }
 
-    private fun toShowAccountInfo(account: AccountModel){
+    private fun toShowAccountInfo(account: AccountModel?){
 //        TODO: dynamically added text view
+        Log.i(TAG, "TO SHOW ACCOUNT INFO")
+        findViewById<CardView>(R.id.card_info_user).visibility = View.VISIBLE
+        findViewById<TextView>(R.id.header_card_info_user).text = "Привет, ${account?.username}"
+        findViewById<TextView>(R.id.card_balance_user).text = "Твой баланс: ${account?.balance.toString()}"
     }
 
 

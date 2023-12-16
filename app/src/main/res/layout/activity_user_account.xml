@@ -7,8 +7,9 @@
     tools:context=".UserAccountActivity"
     android:id="@+id/constraint_layout_account">
 
-    <androidx.cardview.widget.CardView
 
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/card_form_welcome"
         android:layout_width="300dp"
         android:layout_height="400dp"
@@ -64,6 +65,51 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:visibility="gone"
+        android:id="@+id/card_info_user"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="200dp"
+        app:cardCornerRadius="18dp"
+        android:elevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/header_card_info_user"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:text="Привет, "
+            android:textStyle="bold"
+            android:textSize="31dp"
+            android:layout_gravity="center_horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/card_balance_user"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="120dp"
+            android:layout_marginLeft="15dp"
+            android:text=""
+            android:textStyle="bold"
+            android:textSize="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
     </androidx.cardview.widget.CardView>
 
