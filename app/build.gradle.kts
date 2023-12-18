@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.ir.backend.js.compile
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -42,6 +44,8 @@ android {
 
 dependencies {
 
+    implementation("com.sothree.slidinguppanel:library:3.4.0")
+
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")
@@ -55,6 +59,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api:1.7.33")
     implementation("org.slf4j:slf4j-simple:1.7.33")
     //    implementation("com.sothree.slidinguppanel:library:3.4.0")
+    implementation("io.getstream:avatarview-coil:1.0.3")
 
 
 

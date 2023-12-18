@@ -2,15 +2,14 @@ package com.example.lab5v2
 
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
-import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.example.lab5v2.api.ServiceBuilder
 import com.example.lab5v2.api.interfaces.ApiInterface
@@ -20,11 +19,15 @@ import com.example.lab5v2.api.models.MessageModel
 import com.example.lab5v2.api.models.TokenModel
 import com.example.lab5v2.service.TokenService
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import io.getstream.avatarview.AvatarView
+import io.getstream.avatarview.coil.loadImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
+
 
 class UserAccountActivity : AppCompatActivity() {
     private lateinit var passwordUserEditText: EditText
@@ -198,11 +201,23 @@ class UserAccountActivity : AppCompatActivity() {
     }
 
     private fun toShowAccountInfo(account: AccountModel?){
-//        TODO: dynamically added text view
         Log.i(TAG, "TO SHOW ACCOUNT INFO")
         findViewById<CardView>(R.id.card_info_user).visibility = View.VISIBLE
         findViewById<TextView>(R.id.header_card_info_user).text = "Привет, ${account?.username}"
         findViewById<TextView>(R.id.card_balance_user).text = "Твой баланс: ${account?.balance.toString()}"
+        val avatarView: AvatarView = findViewById(R.id.avatar_user)
+        avatarView.loadImage(R.drawable.avatar_icon)
+        // TODO: tets sliding panel
+
+        val slideUpPanel: SlidingUpPanelLayout = findViewById(R.id.sliding_panel_account_info)
+        slideUpPanel.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+        slideUpPanel.setFadeOnClickListener(View.OnClickListener {
+//            slideUpPanel.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+
+
+        })
+
+
     }
 
 
