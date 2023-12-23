@@ -12,7 +12,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     companion object {
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "elibrary.db"
-        private  val TABLES = arrayOf("users", "genres", "books", "bills")
+        private  val TABLES = arrayOf("users", "genres", "books")
         private val TAG = this.javaClass.simpleName
     }
 
@@ -21,7 +21,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 "id INTEGER PRIMARY KEY," +
                 "username VARCHAR(128) UNIQUE," +
                 "password_hash VARCHAR(255)," +
-                "role VARCHAR(255)"+
+                "role VARCHAR(255),"+
+                "isAdmin BOOLEAN" +
                 ")"
 
         val createGenresTableQuery = "CREATE TABLE genres (" +
@@ -35,21 +36,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 "author VARCHAR(255)," +
                 "genre_id INTEGER," +
                 "description VARCHAR(255)," +
-                "price REAL," +
+                "created_at TIMESTAMP DEFAUlT CURRENT_TiMESTAMP," +
+                "count_likes INTEGER DEFAULT 0"
                 "FOREIGN KEY (genre_id) REFERENCES genres(id)" +
                 ")"
-        val createBillsQuery: String = "CREATE TABLE bills ("+
-                "id INTEGER PRIMARY KEY," +
-                "user_id INTEGER," +
-                "book_id INTEGER," +
-                "start_date TIMESTAMP," +
-                "end_date TIMESTAMP," +
-                "price REAL," +
-                "FOREIGN KEY (user_id) REFERENCES users(id)," +
-                "FOREIGN KEY (book_id) REFERENCES books(id)"+
-                ")"
 
-        val queries: Array<String> = arrayOf(createUserTableQuery,createGenresTableQuery,createBooksTable,createBillsQuery)
+        val queries: Array<String> = arrayOf(createUserTableQuery,createGenresTableQuery,createBooksTable)
         queries.forEach{query -> db.execSQL(query)}
 
 
@@ -64,7 +56,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         onCreate(db)
     }
 
+    fun addedInitGenres(){
+        // TODO: ADD INIT GENRES
+
+    }
+
     fun addToGenreTable(columnName: String, value: String){
+
         Log.i(TAG, "addToGenreTable")
         val contentValues = ContentValues()
         val database: SQLiteDatabase = this.writableDatabase

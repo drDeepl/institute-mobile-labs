@@ -8,9 +8,9 @@
         android:icon="@drawable/home_btn_menu"/>
 
     <item
-        android:id="@+id/to_liked_books_activity"
+        android:id="@+id/to_add_book"
         android:enabled="true"
-        android:icon="@drawable/heart_btn_menu"/>
+        android:icon="@drawable/plus_btn_menu"/>
 
     <item
         android:id="@+id/to_user_profile_activity"
