@@ -37,7 +37,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 "genre_id INTEGER," +
                 "description VARCHAR(255)," +
                 "created_at TIMESTAMP DEFAUlT CURRENT_TiMESTAMP," +
-                "count_likes INTEGER DEFAULT 0"
+                "count_likes INTEGER DEFAULT 0," +
                 "FOREIGN KEY (genre_id) REFERENCES genres(id)" +
                 ")"
 

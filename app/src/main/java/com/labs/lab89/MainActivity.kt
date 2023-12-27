@@ -6,7 +6,10 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup.LayoutParams
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -94,7 +97,7 @@ class MainActivity : AppCompatActivity() {
         navigationBottom.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.to_add_book -> {
-                    changeStateSldiingPanel()
+                    showSldiingPanelAddBook()
                     Toast.makeText(this, "click to add menu", Toast.LENGTH_SHORT).show()
 
                 }
@@ -111,8 +114,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun changeStateSldiingPanel(){
+    private fun showSldiingPanelAddBook(){
         findViewById<SlidingUpPanelLayout>(R.id.sliding_layout).panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+        val genres: List<String> = listOf("приключения", "детектив", "фэнтези", "фанфик")
+
+
+        val spinnerGenres: Spinner = findViewById(R.id.genre_book_create_spinner)
+        val adapterGenres: ArrayAdapter<String> = ArrayAdapter(this,android.R.layout.simple_spinner_item, genres)
+
+        adapterGenres.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerGenres.setAdapter(adapterGenres)
+
+        spinnerGenres.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                println("onItemSelected")
+                val selectedItem: String = spinnerGenres.selectedItem.toString()
+                Log.i(TAG, "ITEM SELECTED ${selectedItem}")
+            }
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                Log.i(TAG, "onNothingSelected")
+
+            }
+        }
+
     }
 
 
