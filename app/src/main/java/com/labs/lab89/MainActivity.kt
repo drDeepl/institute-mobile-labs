@@ -1,15 +1,12 @@
 package com.labs.lab89
 
-import android.content.ContentValues
-import android.content.Context
+import android.app.AlertDialog
 import android.content.Intent
 import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -18,16 +15,13 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginStart
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationView
 import com.labs.lab89.database.DatabaseHelper
 import com.labs.lab89.exceptions.BookCreateModelHaveEmptyFields
 import com.labs.lab89.models.BookCreateModel
 import com.labs.lab89.models.BookModel
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         init()
         val newBooksClickable: TextView = findViewById(R.id.new_books)
 //        val popularBooksClickable:TextView = findViewById(R.id.popular_books)
@@ -55,21 +50,13 @@ class MainActivity : AppCompatActivity() {
 
 
         setHomeFragment()
-
-        dbHelper.getGenres()
-
-
-
-
     }
 
     private fun setHomeFragment(){
         val homeFragment = HomeFragment()
-
         supportFragmentManager.beginTransaction()
             .replace(R.id.home_fragment_container, homeFragment)
             .commit()
-
     }
 
     fun init(){
@@ -98,6 +85,11 @@ class MainActivity : AppCompatActivity() {
             catch (eHaveEmptyFields: BookCreateModelHaveEmptyFields){
                 Toast.makeText(this, "${eHaveEmptyFields.message}", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        val addBookImg: ImageView = findViewById(R.id.add_book_image)
+        addBookImg.setOnClickListener{
+            showSlidingPanelAddBook()
 
         }
     }
@@ -105,12 +97,12 @@ class MainActivity : AppCompatActivity() {
     private fun createModelFromFormAddBook(): BookCreateModel{
         val name: String = findViewById<EditText>(R.id.name_book_create_field).text.toString()
         val description: String = findViewById<EditText>(R.id.description_book_create_field).toString()
-        val genreName: String = findViewById<Spinner>(R.id.genre_book_create_spinner).selectedItem.toString()
         val genreId: Int = dbHelper.getGenreIdByName(spinnerGenres.selectedItem.toString())
         val author: String = findViewById<EditText>(R.id.author_book_create_field).text.toString()
         if(genreId < 0 || name.isEmpty() || description.isEmpty() || author.isEmpty()){
             throw BookCreateModelHaveEmptyFields("Некоторые поля пропущены")
         }
+        Toast.makeText(this@MainActivity, "$name $description $genreId $author", Toast.LENGTH_SHORT).show()
         return BookCreateModel(name,description,genreId, author)
     }
 
@@ -120,14 +112,11 @@ class MainActivity : AppCompatActivity() {
         val navigationBottom: BottomNavigationView = findViewById(R.id.bottom_navigation)
         navigationBottom.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
-                R.id.to_add_book -> {
-                    showSlidingPanelAddBook()
-//                    Toast.makeText(this, "click to add menu", Toast.LENGTH_SHORT).show()
 
-                }
                 R.id.to_user_profile_activity-> {
                     val intent: Intent = Intent(this, UserProfileActivity::class.java)
                     startActivity(intent)
+
                 }
                 R.id.to_main_activity -> {
                     val intent: Intent = Intent(this, MainActivity::class.java)
@@ -141,7 +130,12 @@ class MainActivity : AppCompatActivity() {
     private fun showSlidingPanelAddBook(){
         findViewById<SlidingUpPanelLayout>(R.id.sliding_layout).panelState = SlidingUpPanelLayout.PanelState.EXPANDED
 
-        val genres: List<String> = dbHelper.getGenres()
+        var genres: List<String> = dbHelper.getGenres()
+        if(genres.size == 0){
+            genres += "выбор жанра"
+        }
+        genres += "добавить жанр"
+
 
         val adapterGenres: ArrayAdapter<String> = ArrayAdapter(this,android.R.layout.simple_spinner_item, genres)
 
@@ -153,6 +147,12 @@ class MainActivity : AppCompatActivity() {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 println("onItemSelected")
                 val selectedItem: String = spinnerGenres.selectedItem.toString()
+                if(selectedItem == "добавить жанр"){
+                    Toast.makeText(this@MainActivity, "Добавить жанр", Toast.LENGTH_SHORT).show()
+                    toShowDialogF4AddGenreAndAddUpdate2Adapter(adapterGenres)
+                    spinnerGenres.clearFocus()
+
+                }
                 Log.i(TAG, "ITEM SELECTED ${selectedItem}")
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -160,12 +160,36 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
-
     }
-
     private fun toShowBoooks(){
         val books: List<BookModel> = dbHelper.getBooks()
 
+    }
+
+    private fun toShowDialogF4AddGenreAndAddUpdate2Adapter(adapterGenres: ArrayAdapter<String>){
+        val builder = AlertDialog.Builder(this)
+        val nameGenre:EditText = EditText(this@MainActivity)
+        nameGenre.marginStart
+        nameGenre.hint = "жанр"
+        builder.setTitle("добавление жанра")
+        builder.setView(nameGenre)
+
+        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+            if(!nameGenre.text.isEmpty()) {
+                dbHelper.addToGenreTable(nameGenre.text.toString())
+                adapterGenres.clear()
+                adapterGenres.addAll(dbHelper.getGenres())
+            }else{
+                Toast.makeText(this@MainActivity, "Необходимо запонить поле", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        builder.setNegativeButton(android.R.string.no) { dialog, which ->
+            Toast.makeText(applicationContext,
+                android.R.string.no, Toast.LENGTH_SHORT).show()
+        }
+
+        builder.show()
     }
 
 
@@ -174,13 +198,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.name_book_create_field).text.clear()
         findViewById<EditText>(R.id.description_book_create_field).text.clear()
         findViewById<EditText>(R.id.author_book_create_field).text.clear()
-    }
-
-
-
-    private fun getPxFromDp(dp: Int): Int {
-        val scale = resources.displayMetrics.density
-        return (dp * scale + 0.5f).toInt()
     }
 
     override fun onDestroy() {

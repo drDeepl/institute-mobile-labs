@@ -8,13 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.labs.lab89.models.BookCreateModel
 import com.labs.lab89.models.BookModel
+import com.labs.lab89.models.UserModel
 import java.sql.Timestamp
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_VERSION = 1
-        private const val DATABASE_NAME = "elibrary.db"
+        private const val DATABASE_NAME = "elibraryv1.db"
         private  val TABLES = arrayOf("users", "genres", "books")
         private val TAG = this.javaClass.simpleName
     }
@@ -24,7 +25,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 "id INTEGER PRIMARY KEY," +
                 "username VARCHAR(128) UNIQUE," +
                 "password_hash VARCHAR(255)," +
-                "role VARCHAR(255),"+
                 "isAdmin BOOLEAN" +
                 ")"
 
@@ -60,24 +60,25 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     fun addedInitGenres(){
-        // TODO: ADD INIT GENRES
         val genres: List<String> = listOf("приключения", "детектив", "фэнтези", "фанфик")
-        genres.forEach{genreLabel -> addToGenreTable("genre", genreLabel)}
+        genres.forEach{genreLabel -> addToGenreTable(genreLabel)}
     }
 
-    fun addToGenreTable(columnName: String, value: String){
+    fun addToGenreTable(value: String){
 
         Log.i(TAG, "addToGenreTable\t $value")
         val contentValues = ContentValues()
         val database: SQLiteDatabase = this.writableDatabase
-        contentValues.put(columnName, value)
+        contentValues.put("genre", value)
         try{
             database.insertOrThrow("genres", null, contentValues)
-            database.close()
             Log.i(TAG, "addToGenreTable: success put")
         }
         catch (e: Exception) {
             Log.e(TAG, e.message.toString())
+        }
+        finally{
+            database.close()
         }
     }
 
@@ -118,6 +119,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         var successPut: Boolean = false
         Log.i(TAG, "addToGenreTable")
         val contentValues = ContentValues()
+        Log.i(TAG, "Book: ${bookCreateModel.name} ${bookCreateModel.author} ${bookCreateModel.genreId} ${bookCreateModel.description}")
         val database: SQLiteDatabase = this.writableDatabase
         contentValues.put("name", bookCreateModel.name)
         contentValues.put("author", bookCreateModel.author)
@@ -136,18 +138,26 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     fun getBooks(): ArrayList<BookModel>{
+        Log.w(TAG, "GET BOOKS")
         val books: ArrayList<BookModel> = ArrayList();
         val db = this.readableDatabase
         val cursor: Cursor? = db.rawQuery("SELECT * FROM books INNER JOIN genres ON genres.id = books.genre_id ORDER BY books.id DESC", null)
+        Log.w(TAG, "AFTER CURSOR")
         cursor?.let {
             if(it.moveToFirst()){
                 do {
 
                     val name:String = cursor.getString(cursor.getColumnIndex("name"))
+                    Log.w(TAG, "NAME $name")
                     val author: String = cursor.getString(cursor.getColumnIndex("author"))
+                    Log.w(TAG, "AUTHRO $author")
                     val genre: String = cursor.getString(cursor.getColumnIndex("genre"))
+                    Log.w(TAG, "GENRE $genre")
+                    println(cursor.getInt(cursor.getColumnIndex("count_likes")))
                     val countLikes: Int = cursor.getInt(cursor.getColumnIndex("count_likes"))
+                    Log.w(TAG, "COUNT LIKES $countLikes")
                     val bookModel: BookModel =  BookModel(name, author, genre, countLikes)
+                    Log.w(TAG, "$name $author $genre $countLikes")
                     books.add(bookModel)
                     Log.i(TAG, "getBooks: $author")
                 }
@@ -196,8 +206,46 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         finally {
             db.close()
         }
+    }
 
+    fun addUser(user: UserModel): Boolean{
+        Log.i(TAG, "addUser")
+        var successPut: Boolean = false
+        val contentValues = ContentValues()
+        Log.i(TAG, "User: ${user.username} ${user.password} ${user.isAdmin}")
+        val database: SQLiteDatabase = this.writableDatabase
+        contentValues.put("username", user.username)
+        contentValues.put("password_hash", user.password)
+        contentValues.put("isAdmin", user.isAdmin)
 
+        try{
+            database.insertOrThrow("users", null, contentValues)
+            successPut = true;
+            Log.i(TAG, "addUser: success put")
+        }
+        catch (e: Exception) {
+            Log.e(TAG, e.message.toString())
+        }
+        finally {
+            database.close()
+        }
+        return successPut
+    }
 
+    fun getUserByUserName(username: String): UserModel?{
+        Log.i(TAG, "getUserByUsername")
+        val db: SQLiteDatabase = this.readableDatabase
+        val query: String = "SELECT * FROM users WHERE username = '$username'"
+        val cursor: Cursor = db.rawQuery(query, null)
+        if(cursor.moveToFirst()){
+            val username: String = cursor.getString(cursor.getColumnIndex("username"))
+            val password: String = cursor.getString(cursor.getColumnIndex("password_hash"))
+            val isAdmin: Boolean = cursor.getString(cursor.getColumnIndex("isAdmin")).toBoolean()
+            Log.i(TAG, "GET USER: ${username} ${password} ${isAdmin}")
+            cursor.close()
+            db.close()
+            return UserModel(username, password, isAdmin)
+        }
+        return null
     }
 }
